@@ -1,0 +1,13 @@
+services:
+  echo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    restart: unless-stopped
+    environment:
+      - "LOGS__FORMAT=default"
+    ports:
+      - 3000:80
