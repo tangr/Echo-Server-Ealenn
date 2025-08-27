@@ -32,6 +32,7 @@ module.exports = (req, res, next) => {
         break;
       case "object":
         log.info({
+          logtime: `${new Date().toISOString()}`,
           host: require('../response/host')(req),
           http: require('../response/http')(req),
           request: require('../response/request')(req),
@@ -39,12 +40,14 @@ module.exports = (req, res, next) => {
         });
         break;
       default:
+        log.info(`${new Date().toUTCString()} | [${req.method}] - ${req.protocol}://${req.get('host')}${req.originalUrl}`);
         log.info({
+          logtime: `${new Date().toISOString()}`,
           host: require('../response/host')(req),
           http: require('../response/http')(req),
           request: require('../response/request')(req),
           environment: require('../response/environment')(req)
-        }, `${new Date().toUTCString()} | [${req.method}] - ${req.protocol}://${req.get('host')}${req.originalUrl}`);
+        });
         break;
     }
   }
