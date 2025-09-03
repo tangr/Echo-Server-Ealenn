@@ -19,6 +19,29 @@ app.disable('x-powered-by');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 app.use(bodyParser.json({type: ['json', 'jsonld']}));
+
+// Handle requests without Content-Type or with unrecognized Content-Type
+app.use((req, res, next) => {
+  if (req.body === undefined || (typeof req.body === 'object' && Object.keys(req.body).length === 0)) {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      if (body) {
+        try {
+          req.body = JSON.parse(body);
+        } catch (e) {
+          req.body = body;
+        }
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
 app.use(require('cookie-parser')());
 app.use(require('multer')().array());
 
