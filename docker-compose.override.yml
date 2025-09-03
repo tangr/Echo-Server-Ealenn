@@ -1,0 +1,5 @@
+services:
+  echo:
+    image: ops/echo-server:latest
+    restart: unless-stopped
+
